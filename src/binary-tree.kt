@@ -6,7 +6,7 @@ fun main(args : Array<String>) {
         buffer = readLine()!!.split(' ')
         if (buffer[0] == "break") break
         when (buffer[0]) {
-           "printTree" -> println(binaryTreeEntity.getTreeList())
+           "printElements" -> println(binaryTreeEntity.getTreeList())
            "add" -> binaryTreeEntity.add(buffer.drop(1).map(String::toInt).slice(1 until buffer.size-1))
            "isHere" -> println(binaryTreeEntity.isHere(buffer[1].toInt()))
            "printRange" -> println(binaryTreeEntity.getInRange(buffer[1].toInt(), buffer[2].toInt()))
