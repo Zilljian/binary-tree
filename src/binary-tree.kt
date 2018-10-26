@@ -1,23 +1,20 @@
-import java.util.*
-
 fun main(args : Array<String>) {
-    val tempArray = arrayOf(1,34,3,5,6,7,3,5,343)
+    val tempArray = mutableListOf(1,34,3,5,6,7,343)
     val binaryTreeEntity = BinaryTree(tempArray)
 
-    println(binaryTreeEntity.isHere(3))
-    binaryTreeEntity.add(200)
-    println(binaryTreeEntity.isHere(200))
+    for (item in binaryTreeEntity.getInRange(1,7)) print("$item ")
 }
 
 class Node (var rNode: Node?, var lNode: Node?, val value: Int)
 
-class BinaryTree (private val elements: Array<Int>) {
+class BinaryTree (elements: MutableList<Int>) {
 
     private val head = Node(null, null, elements[0])
-    private val listOfElements = Vector<Int>(elements[0])
+    private var minElement: Int = elements.min()!!
+    private var maxElement: Int = elements.max()!!
 
     init {
-        elements.drop(1)
+        elements.remove(1)
         for (item in elements) add(item)
     }
 
@@ -28,8 +25,15 @@ class BinaryTree (private val elements: Array<Int>) {
             parent.lNode == null -> parent.lNode = Node(null, null, element)
             else -> add(element, parent.lNode)
         }
-        listOfElements.addElement(element)
+        maxElement = if(parent.value > maxElement) parent.value else maxElement
+        minElement = if(parent.value < minElement) parent.value else minElement
     }
 
-    fun isHere (element: Int) = element in listOfElements
+    fun isHere (element: Int) = element in getInRange()
+
+    fun getInRange (lValue: Int = minElement, rValue: Int = maxElement, parent: Node? = head) : Array<Int> = when {
+        parent == null -> arrayOf()
+        parent.value in lValue..rValue -> arrayOf(parent.value).plus(getInRange(lValue, rValue, parent.rNode)).plus(getInRange(lValue, rValue, parent.lNode))
+        else -> getInRange(lValue, rValue, parent.rNode).plus(getInRange(lValue, rValue, parent.lNode))
+    }
 }
