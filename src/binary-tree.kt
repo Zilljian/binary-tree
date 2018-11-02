@@ -1,6 +1,18 @@
+/*
+Launch the program, enter initial numbers through Space.
+* Next, pick one of the following actions:
+* add {Finite list of numbers through Space} - Add this numbers to tree.
+* printElements - Print entire tree as list.
+* isHere {number} - Check, is certain number contained by tree.
+* printRange {left value} {right value} - Print every number from the tree included into [left value, right value]
+* break - Shut the program down.
+* */
+
 fun main(args : Array<String>) {
+    println("Please, enter initial numbers through space >>")
     var buffer = readLine()!!.split(' ')
     val binaryTreeEntity = BinaryTree(buffer.map(String::toInt))
+    println(binaryTreeEntity.getTreeList())
 
     while(true) {
         buffer = readLine()!!.split(' ')
@@ -43,7 +55,9 @@ class BinaryTree(elements: List<Int>) {
 
     fun getInRange(lValue: Int = minElement, rValue: Int = maxElement, parent: Node? = head) : List<Int> = when {
         parent == null -> listOf()
-        parent.value in lValue..rValue -> listOf(parent.value).plus(getInRange(lValue, rValue, parent.rNode)).plus(getInRange(lValue, rValue, parent.lNode))
-        else -> getInRange(lValue, rValue, parent.rNode).plus(getInRange(lValue, rValue, parent.lNode))
+        parent.value in lValue..rValue -> listOf(parent.value).plus(getInRange(lValue, rValue, parent.lNode)).plus(getInRange(lValue, rValue, parent.rNode))
+        parent.value > rValue  -> getInRange(lValue, rValue, parent.lNode)
+        parent.value < lValue -> getInRange(lValue, rValue, parent.rNode)
+        else -> listOf()
     }
 }
